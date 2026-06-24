@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Patrick+Hand&display=swap');
+
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff0f6;
+  color: #473340;
+  overflow-x: hidden;
+  scroll-behavior: auto; /* Lenis handles smoothing; avoid double-smoothing */
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+/* Lock scrolling during the intro sequence */
+body.no-scroll {
+  height: 100vh;
+  overflow: hidden;
+}
+
+::selection {
+  background: #ffb6d5;
+  color: #352532;
+}
+
+/* Visible keyboard focus everywhere, styled to match the theme */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #f491be;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Soft custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #ffe8f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffb6d5;
+  border-radius: 8px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.text-shadow-glow {
+  text-shadow: 0 0 18px rgba(255, 182, 213, 0.8), 0 0 36px rgba(248, 215, 255, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
