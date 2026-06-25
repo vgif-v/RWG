@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { SONG } from '../content';
 
 /**
- * Glassmorphism music player. `canPlay` should be wired to the same
- * "user interacted with the ribbon" event that unlocks scrolling
- * (browsers require a user gesture before audio can autoplay anyway).
+ * Glassmorphism music player styled as a vinyl record in a glass sleeve.
+ * `canPlay` should be wired to the same "user interacted with the ribbon"
+ * event that unlocks scrolling (browsers require a user gesture before
+ * audio can autoplay anyway).
  */
 export default function MusicPlayer({ canPlay = false }) {
   const audioRef = useRef(null);
@@ -12,6 +13,7 @@ export default function MusicPlayer({ canPlay = false }) {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.6);
+  const [coverFailed, setCoverFailed] = useState(false);
   const hasAutoStarted = useRef(false);
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function MusicPlayer({ canPlay = false }) {
   }
 
   return (
-    <div className="glass mx-auto flex w-full max-w-md items-center gap-4 rounded-2xl p-4 shadow-glass">
+    <div className="player-glass">
       <audio
         ref={audioRef}
         src={SONG.src}
@@ -79,35 +81,44 @@ export default function MusicPlayer({ canPlay = false }) {
         onEnded={() => setIsPlaying(false)}
       />
 
-      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl shadow-polaroid">
-        <img
-          src={SONG.cover}
-          alt={`${SONG.title} album cover`}
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+      {/* spinning vinyl in its glass sleeve — spins only while playing */}
+      <div className="disc-frame">
+        <div className={`disc${isPlaying ? ' spinning' : ''}`}>
+          {!coverFailed && (
+            <img
+              src={SONG.cover}
+              alt=""
+              className="disc-cover"
+              onError={() => setCoverFailed(true)}
+            />
+          )}
+          <span className="disc-center" />
+        </div>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-center justify-between gap-2">
-          <span className="truncate font-body text-sm font-semibold text-ink-800">
-            {SONG.title}
-          </span>
-          <span className="whitespace-nowrap font-body text-xs text-ink-700/70">
-            Now Playing ❤️
-          </span>
+      <div className="player-meta">
+        <div className="player-title-row">
+          <span className="player-title">{SONG.title}</span>
+          <span className="player-now-playing">now playing</span>
         </div>
-        <span className="truncate font-body text-xs text-ink-700/70">{SONG.artist}</span>
+        <span className="player-artist">{SONG.artist}</span>
 
-        <div className="mt-1 flex items-center gap-2">
+        <div className="player-controls-row">
           <button
             onClick={togglePlay}
             aria-label={isPlaying ? 'Pause' : 'Play'}
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blush-300 text-white transition hover:bg-blush-400"
+            className="player-play-btn"
           >
-            {isPlaying ? '⏸' : '▶'}
+            {isPlaying ? (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect x="6" y="5" width="4" height="14" rx="1" />
+                <rect x="14" y="5" width="4" height="14" rx="1" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M7 4.5v15l13-7.5-13-7.5Z" />
+              </svg>
+            )}
           </button>
 
           <input
@@ -116,17 +127,17 @@ export default function MusicPlayer({ canPlay = false }) {
             max={duration || 0}
             value={progress}
             onChange={handleSeek}
-            className="h-1 flex-1 cursor-pointer accent-blush-400"
             aria-label="Seek"
           />
 
-          <span className="w-10 flex-shrink-0 text-right font-body text-[11px] text-ink-700/70">
-            {formatTime(progress)}
-          </span>
+          <span className="player-time">{formatTime(progress)}</span>
         </div>
 
-        <div className="flex items-center gap-2 pt-1">
-          <span className="text-xs">🔈</span>
+        <div className="player-volume-row">
+          <svg className="player-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M11 5 6 9H2v6h4l5 4V5Z" />
+            <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+          </svg>
           <input
             type="range"
             min={0}
@@ -134,7 +145,6 @@ export default function MusicPlayer({ canPlay = false }) {
             step={0.01}
             value={volume}
             onChange={handleVolume}
-            className="h-1 w-20 cursor-pointer accent-blush-400"
             aria-label="Volume"
           />
         </div>

@@ -4,7 +4,7 @@
 // src/assets/photos/ and your song file into src/assets/music/
 // ─────────────────────────────────────────────────────────────────────────
 
-export const HER_NAME = '[Her Name]';
+export const HER_NAME = 'Bé';
 
 // Used by the memory counter. Format: 'YYYY-MM-DDTHH:mm:ss'
 // Leave as-is for now — placeholder date, swap in the real one later.
@@ -26,9 +26,6 @@ I love you, today and always.`;
 
 // The final message inside the envelope at the very end of the site.
 export const FINAL_LETTER = `${HER_NAME},
-
-[This is the last page — make it count. Tell her exactly
-what you wanted her to feel by the time she got here.]
 
 Happy Birthday. I love you more than this whole little
 website could ever show.`;

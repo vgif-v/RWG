@@ -5,30 +5,31 @@ import { FINAL_LETTER } from '../content';
 export default function EnvelopeSection() {
   const [isOpen, setIsOpen] = useState(false);
   const flapRef = useRef(null);
+  const sealRef = useRef(null);
   const letterRef = useRef(null);
-  const messageRef = useRef(null);
+  const hintRef = useRef(null);
   const sparkleLayerRef = useRef(null);
 
   function spawnSparkles() {
     const layer = sparkleLayerRef.current;
     if (!layer) return;
-    const glyphs = ['✦', '♡', '✿', '💗'];
+    const glyphs = ['+', '*', '·'];
 
-    for (let i = 0; i < 26; i++) {
+    for (let i = 0; i < 22; i++) {
       const span = document.createElement('span');
       span.textContent = glyphs[i % glyphs.length];
       span.style.position = 'absolute';
-      span.style.left = '50%';
-      span.style.top = '40%';
-      span.style.fontSize = `${12 + Math.random() * 16}px`;
+      span.style.left = '0';
+      span.style.top = '0';
+      span.style.fontSize = `${12 + Math.random() * 14}px`;
       span.style.pointerEvents = 'none';
-      span.style.color = i % 2 === 0 ? '#FF9FC9' : '#FFE8A3';
+      span.style.color = i % 2 === 0 ? '#f491be' : '#ffd9ab';
       layer.appendChild(span);
 
       const angle = Math.random() * Math.PI * 2;
-      const distance = 100 + Math.random() * 180;
+      const distance = 70 + Math.random() * 140;
       const x = Math.cos(angle) * distance;
-      const y = Math.sin(angle) * distance - 60;
+      const y = Math.sin(angle) * distance - 40;
 
       gsap.fromTo(
         span,
@@ -37,9 +38,9 @@ export default function EnvelopeSection() {
           x,
           y,
           opacity: 0,
-          scale: 1.2,
+          scale: 1.1,
           rotate: Math.random() * 180 - 90,
-          duration: 1.8 + Math.random() * 0.6,
+          duration: 1.4 + Math.random() * 0.5,
           ease: 'power2.out',
           onComplete: () => span.remove(),
         }
@@ -51,35 +52,40 @@ export default function EnvelopeSection() {
     if (isOpen) return;
     setIsOpen(true);
 
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const dur = (seconds) => (prefersReducedMotion ? 0.001 : seconds);
+
     const tl = gsap.timeline();
 
-    // 1. Envelope flap opens
+    // 1. Seal and hint fade out
+    tl.to(sealRef.current, { opacity: 0, duration: dur(0.25), ease: 'power1.out' });
+    tl.to(hintRef.current, { opacity: 0, duration: dur(0.25), ease: 'power1.out' }, '<');
+
+    // 2. Flap folds back away from the viewer on its top-edge hinge
+    //    transform-origin: top center + rotateX(-180) = folds flat against the back
     tl.to(flapRef.current, {
-      rotateX: -160,
-      duration: 0.7,
-      ease: 'power2.out',
+      opacity: 0,
+      duration: dur(0.3),
+      ease: 'power1.out',
     });
 
-    // 2. Letter rises
+    // 3. Letter rises out of the envelope
     tl.to(
       letterRef.current,
       {
-        y: -120,
+        y: prefersReducedMotion ? 0 : -70,
         opacity: 1,
-        duration: 0.9,
+        duration: dur(0.7),
         ease: 'power3.out',
       },
-      '-=0.2'
+      prefersReducedMotion ? '+=0' : '-=0.25'
     );
 
-    tl.call(() => spawnSparkles());
-
-    // 3. Message fades in
-    tl.to(
-      messageRef.current,
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-      '-=0.3'
-    );
+    if (!prefersReducedMotion) {
+      tl.call(() => spawnSparkles());
+    }
   }
 
   return (
@@ -88,15 +94,11 @@ export default function EnvelopeSection() {
         One last thing
       </h2>
 
-      <div
-        ref={sparkleLayerRef}
-        className="pointer-events-none absolute left-1/2 top-1/2 z-30 h-0 w-0"
-      />
+      <div className="envelope-scene">
+        <div ref={sparkleLayerRef} className="sparkle-layer" />
 
-      <div className="relative flex flex-col items-center" style={{ perspective: 1000 }}>
         <div
-          className="relative cursor-pointer"
-          style={{ width: 280, height: 190 }}
+          className="envelope-stage"
           onClick={handleOpen}
           role="button"
           tabIndex={0}
@@ -105,42 +107,31 @@ export default function EnvelopeSection() {
             if (e.key === 'Enter' || e.key === ' ') handleOpen();
           }}
         >
-          {/* Letter, hidden behind the envelope body until it rises */}
-          <div
-            ref={letterRef}
-            className="glass absolute left-1/2 top-6 z-10 w-64 -translate-x-1/2 rounded-lg p-6 opacity-0 shadow-glass"
-          >
-            <p
-              ref={messageRef}
-              className="translate-y-3 whitespace-pre-line text-center font-hand text-lg leading-relaxed text-ink-800 opacity-0"
-            >
-              {FINAL_LETTER}
-            </p>
+          <div className="env-back" />
+
+          <p ref={letterRef} className="env-letter">
+            {FINAL_LETTER}
+          </p>
+
+          <div className="env-front" />
+
+          <div ref={flapRef} className="env-flap">
+            <div className="env-flap-face outer" />
+            <div className="env-flap-face inner" />
           </div>
 
-          {/* Envelope body */}
-          <svg viewBox="0 0 280 190" width="280" height="190" className="absolute inset-0 z-20">
-            <rect x="0" y="0" width="280" height="190" rx="10" fill="#FFD6E7" stroke="#FF9FC9" strokeWidth="3" />
-            <path d="M0 10 L140 120 L280 10" fill="none" stroke="#FF9FC9" strokeWidth="3" />
-          </svg>
-
-          {/* Flap, flips open on click */}
-          <div
-            ref={flapRef}
-            className="absolute left-0 top-0 z-30"
-            style={{ transformOrigin: '50% 0%', transformStyle: 'preserve-3d' }}
-          >
-            <svg viewBox="0 0 280 130" width="280" height="130">
-              <path d="M0 0 L280 0 L140 110 Z" fill="#FFB6D5" stroke="#FF9FC9" strokeWidth="3" />
+          <div ref={sealRef} className="env-seal">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 21s-7.5-4.6-10-9.3C0.5 8.4 2 5 5.3 5c1.9 0 3.3 1 4.7 2.7C11.4 6 12.8 5 14.7 5 18 5 19.5 8.4 22 11.7 19.5 16.4 12 21 12 21Z" />
             </svg>
           </div>
-
-          {!isOpen && (
-            <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap font-body text-sm text-ink-700/70">
-              Tap to open
-            </span>
-          )}
         </div>
+
+        {!isOpen && (
+          <p ref={hintRef} className="envelope-hint">
+            Tap to open
+          </p>
+        )}
       </div>
     </section>
   );
