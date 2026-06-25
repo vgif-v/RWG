@@ -4,6 +4,21 @@
 // src/assets/photos/ and your song file into src/assets/music/
 // ─────────────────────────────────────────────────────────────────────────
 
+import photo1 from './assets/photos/photo-1.jpg';
+import photo2 from './assets/photos/photo-2.jpg';
+import photo3 from './assets/photos/photo-3.jpg';
+import photo4 from './assets/photos/photo-4.jpg';
+import photo5 from './assets/photos/photo-5.jpg';
+import photo6 from './assets/photos/photo-6.jpg';
+import photo7 from './assets/photos/photo-7.jpg';
+import photo8 from './assets/photos/photo-8.jpg';
+import photo9 from './assets/photos/photo-9.jpg';
+import photo10 from './assets/photos/photo-10.jpg';
+import photo11 from './assets/photos/photo-11.jpg';
+import photo12 from './assets/photos/photo-12.jpg';
+import photo13 from './assets/photos/photo-13.jpg';
+
+
 export const HER_NAME = 'Bé';
 
 // Used by the memory counter. Format: 'YYYY-MM-DDTHH:mm:ss'
@@ -59,27 +74,27 @@ export const SECRET_NOTES = [
 // Using string paths so this file stays plain data — components import
 // the actual images.
 export const POLAROID_PHOTOS = [
-  { id: 'p1', src: '/src/assets/photos/photo-1.jpg', caption: '[caption]' },
-  { id: 'p2', src: '/src/assets/photos/photo-2.jpg', caption: '[caption]' },
-  { id: 'p3', src: '/src/assets/photos/photo-3.jpg', caption: '[caption]' },
-  { id: 'p4', src: '/src/assets/photos/photo-4.jpg', caption: '[caption]' },
-  { id: 'p5', src: '/src/assets/photos/photo-5.jpg', caption: '[caption]' },
+  { id: 'p1', src: photo1, caption: '[caption]' },
+  { id: 'p2', src: photo2, caption: '[caption]' },
+  { id: 'p3', src: photo3, caption: '[caption]' },
+  { id: 'p4', src: photo4, caption: '[caption]' },
+  { id: 'p5', src: photo5, caption: '[caption]' },
 ];
 
 export const ALL_PHOTOS = [
-  { id: 'photo-1', src: '/src/assets/photos/photo-1.jpg', caption: '' },
-  { id: 'photo-2', src: '/src/assets/photos/photo-2.jpg', caption: '' },
-  { id: 'photo-3', src: '/src/assets/photos/photo-3.jpg', caption: '' },
-  { id: 'photo-4', src: '/src/assets/photos/photo-4.jpg', caption: '' },
-  { id: 'photo-5', src: '/src/assets/photos/photo-5.jpg', caption: '' },
-  { id: 'photo-6', src: '/src/assets/photos/photo-6.jpg', caption: '' },
-  { id: 'photo-7', src: '/src/assets/photos/photo-7.jpg', caption: '' },
-  { id: 'photo-8', src: '/src/assets/photos/photo-8.jpg', caption: '' },
-  { id: 'photo-9', src: '/src/assets/photos/photo-9.jpg', caption: '' },
-  { id: 'photo-10', src: '/src/assets/photos/photo-10.jpg', caption: '' },
-  { id: 'photo-11', src: '/src/assets/photos/photo-11.jpg', caption: '' },
-  { id: 'photo-12', src: '/src/assets/photos/photo-12.jpg', caption: '' },
-  { id: 'photo-13', src: '/src/assets/photos/photo-13.jpg', caption: '' },
+  { id: 'photo-1', src: photo1, caption: '' },
+  { id: 'photo-2', src: photo2, caption: '' },
+  { id: 'photo-3', src: photo3, caption: '' },
+  { id: 'photo-4', src: photo4, caption: '' },
+  { id: 'photo-5', src: photo5, caption: '' },
+  { id: 'photo-6', src: photo6, caption: '' },
+  { id: 'photo-7', src: photo7, caption: '' },
+  { id: 'photo-8', src: photo8, caption: '' },
+  { id: 'photo-9', src: photo9, caption: '' },
+  { id: 'photo-10', src: photo10, caption: '' },
+  { id: 'photo-11', src: photo11, caption: '' },
+  { id: 'photo-12', src: photo12, caption: '' },
+  { id: 'photo-13', src: photo13, caption: '' },
 ];
  
 // Music player metadata. Drop your audio file into src/assets/music/
