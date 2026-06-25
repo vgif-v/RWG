@@ -43,6 +43,7 @@ I love you, today and always.`;
 // The final message inside the envelope at the very end of the site.
 export const FINAL_LETTER = `Happy Birthday Bé!,
 
+  Wish you all the happiness in the world, and may your day be filled with love, laughter, and unforgettable memories. You deserve all the joy that life has to offer.
  I love you more than this whole thing could ever show.`;
 
 // Secret floating-star notes. Add as many as you like.
