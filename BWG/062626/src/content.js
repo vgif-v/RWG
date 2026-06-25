@@ -29,7 +29,7 @@ export const RELATIONSHIP_START_DATE = '2025-01-01T00:00:00';
 export const BIRTHDAY_TITLE = `Happy Birthday ${HER_NAME}`;
 
 // The handwritten-style letter in the scrapbook section.
-export const SCRAPBOOK_LETTER = `My dearest ${HER_NAME},
+export const SCRAPBOOK_LETTER = `My dearest Rosié,
 
 [Write a little about what makes today special — a memory,
 an inside joke, or just how much you've been looking
@@ -41,10 +41,9 @@ This is just one small page in a much bigger story.
 I love you, today and always.`;
 
 // The final message inside the envelope at the very end of the site.
-export const FINAL_LETTER = `${HER_NAME},
+export const FINAL_LETTER = `Happy Birthday Bé!,
 
-Happy Birthday. I love you more than this whole little
-website could ever show.`;
+ I love you more than this whole thing could ever show.`;
 
 // Secret floating-star notes. Add as many as you like.
 export const SECRET_NOTES = [
@@ -75,11 +74,11 @@ export const SECRET_NOTES = [
 // Using string paths so this file stays plain data — components import
 // the actual images.
 export const POLAROID_PHOTOS = [
-  { id: 'p1', src: photo1, caption: '[caption]' },
-  { id: 'p2', src: photo2, caption: '[caption]' },
-  { id: 'p3', src: photo3, caption: '[caption]' },
-  { id: 'p4', src: photo4, caption: '[caption]' },
-  { id: 'p5', src: photo5, caption: '[caption]' },
+  { id: 'p1', src: photo1, caption: '' },
+  { id: 'p2', src: photo2, caption: '' },
+  { id: 'p3', src: photo3, caption: '' },
+  { id: 'p4', src: photo4, caption: '' },
+  { id: 'p5', src: photo5, caption: '' },
 ];
 
 export const ALL_PHOTOS = [
