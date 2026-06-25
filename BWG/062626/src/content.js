@@ -17,6 +17,7 @@ import photo10 from './assets/photos/photo-10.jpg';
 import photo11 from './assets/photos/photo-11.jpg';
 import photo12 from './assets/photos/photo-12.jpg';
 import photo13 from './assets/photos/photo-13.jpg';
+import song from './assets/music/song.mp3';
 
 
 export const HER_NAME = 'Bé';
@@ -101,6 +102,6 @@ export const ALL_PHOTOS = [
 export const SONG = {
   title: 'Invisible String',
   artist: 'Taylor Swift',
-  src: '/src/assets/music/song.mp3',
+  src: song,
   cover: '/src/assets/photos/photo-1.jpg', // reuse a photo as the album cover, or add your own
 };
