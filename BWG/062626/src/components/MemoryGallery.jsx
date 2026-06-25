@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
-import { POLAROID_PHOTOS, STREAM_PHOTOS } from '../content';
+import { useMemo, useRef, useState, useCallback } from 'react';
+import { POLAROID_PHOTOS, ALL_PHOTOS } from '../content';
 import MusicPlayer from './MusicPlayer';
 
 const ROTATIONS = [-6, 4, -3, 7, -8, 2, 5, -4];
 
 function PolaroidWall() {
-  const photos = useMemo(
+  const initialPhotos = useMemo(
     () =>
       POLAROID_PHOTOS.map((p, i) => ({
         ...p,
@@ -14,61 +14,189 @@ function PolaroidWall() {
     []
   );
 
+  // Current photo shown on each of the five (or however many) polaroid slots.
+  const [photos, setPhotos] = useState(initialPhotos);
+  // Index of the slot currently mid swap-animation, so we know which one to
+  // hide in the normal flow and which falling clone to render on top.
+  const [swappingIndex, setSwappingIndex] = useState(null);
+  // The frozen box (width/height/top/left) of the card being swapped, taken
+  // right before it falls, so the falling clone can be positioned exactly
+  // on top of it and then drop straight down past the other polaroids.
+  const [fallingBox, setFallingBox] = useState(null);
+  // Tracks which slot is hovered so it can rise above the rest of the wall.
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  const containerRef = useRef(null);
+  const cardRefs = useRef([]);
+  const pendingPhotoRef = useRef(null);
+
+  const handlePolaroidClick = useCallback(
+    (index) => {
+      // Ignore clicks while that slot is already mid-animation.
+      if (swappingIndex === index) return;
+
+      const currentlyShown = new Set(photos.map((p) => p.src));
+      const pool = ALL_PHOTOS.filter((p) => !currentlyShown.has(p.src));
+
+      // If every photo in the gallery is already on display, fall back to
+      // the full pool so a click still does something.
+      const candidates = pool.length > 0 ? pool : ALL_PHOTOS;
+      const next = candidates[Math.floor(Math.random() * candidates.length)];
+
+      if (!next) return;
+
+      const cardEl = cardRefs.current[index];
+      const containerEl = containerRef.current;
+      if (!cardEl || !containerEl) return;
+
+      const cardRect = cardEl.getBoundingClientRect();
+      const containerRect = containerEl.getBoundingClientRect();
+
+      pendingPhotoRef.current = { index, next };
+      setFallingBox({
+        top: cardRect.top - containerRect.top,
+        left: cardRect.left - containerRect.left,
+        width: cardRect.width,
+        height: cardRect.height,
+      });
+      setSwappingIndex(index);
+    },
+    [photos, swappingIndex]
+  );
+
+  const handleAnimationEnd = useCallback((index) => {
+    const pending = pendingPhotoRef.current;
+    if (!pending || pending.index !== index) return;
+
+    setPhotos((prev) =>
+      prev.map((p, i) =>
+        i === index
+          ? {
+              ...pending.next,
+              rotate: ROTATIONS[index % ROTATIONS.length],
+            }
+          : p
+      )
+    );
+    pendingPhotoRef.current = null;
+    setSwappingIndex(null);
+    setFallingBox(null);
+  }, []);
+
   return (
-    <div className="relative flex flex-wrap items-start justify-center gap-x-2 gap-y-6 p-6">
-      {photos.map((photo, i) => (
+    <div ref={containerRef} className="relative flex flex-wrap items-start justify-center gap-x-2 gap-y-6 p-6">
+      <style>{`
+        @keyframes polaroidPopOut {
+          0% {
+            transform: rotate(var(--polaroid-rotate, 0deg)) scale(1) translateY(0);
+          }
+          100% {
+            transform: rotate(var(--polaroid-rotate, 0deg)) scale(1.15) translateY(-18px);
+          }
+        }
+        @keyframes polaroidDropVanish {
+          0% {
+            transform: rotate(var(--polaroid-rotate, 0deg)) scale(1.15) translateY(-18px);
+            opacity: 1;
+          }
+          35% {
+            opacity: 1;
+          }
+          100% {
+            transform: rotate(var(--polaroid-rotate, 0deg)) scale(0.85) translateY(220px);
+            opacity: 0;
+          }
+        }
+      `}</style>
+      {photos.map((photo, i) => {
+        const isSwapping = swappingIndex === i;
+        const isHovered = hoveredIndex === i;
+
+        return (
+          <div
+            key={photo.id}
+            ref={(el) => (cardRefs.current[i] = el)}
+            role="button"
+            tabIndex={0}
+            aria-label="Show a different memory"
+            onClick={() => handlePolaroidClick(i)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handlePolaroidClick(i);
+              }
+            }}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex((cur) => (cur === i ? null : cur))}
+            className={`group relative -mb-4 w-40 cursor-pointer rounded-sm bg-white p-3 pb-6 shadow-polaroid transition-transform duration-300 ease-out sm:w-48 ${
+              isSwapping ? '' : 'hover:-translate-y-3 hover:scale-105 hover:shadow-glass'
+            }`}
+            style={{
+              // While swapping, the real card is hidden (opacity 0) but
+              // still occupies its layout slot — the falling clone below
+              // is the one that's actually visible and animating.
+              transform: isSwapping ? undefined : `rotate(${photo.rotate}deg)`,
+              opacity: isSwapping ? 0 : undefined,
+              marginLeft: i % 2 === 1 ? '-1.5rem' : undefined,
+              zIndex: isHovered ? 50 : i,
+              '--polaroid-rotate': `${photo.rotate}deg`,
+            }}
+          >
+            <div className="aspect-square w-full overflow-hidden bg-blush-100">
+              <img
+                src={photo.src}
+                alt={photo.caption}
+                loading="lazy"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+            <p className="mt-2 text-center font-hand text-base text-ink-700">{photo.caption}</p>
+
+            {i % 3 === 0 && (
+              <span className="absolute -right-2 -top-3 text-xl">🌷</span>
+            )}
+          </div>
+        );
+      })}
+
+      {swappingIndex !== null && fallingBox && (
         <div
-          key={photo.id}
-          className="group relative -mb-4 w-40 rotate-0 cursor-default rounded-sm bg-white p-3 pb-6 shadow-polaroid transition-transform duration-300 ease-out hover:-translate-y-3 hover:scale-105 hover:shadow-glass sm:w-48"
+          aria-hidden="true"
+          onAnimationEnd={(e) => {
+            // Only react to the second (drop/vanish) animation finishing —
+            // the pop-out is just the first half and shouldn't trigger swap.
+            if (e.animationName === 'polaroidDropVanish') {
+              handleAnimationEnd(swappingIndex);
+            }
+          }}
+          className="pointer-events-none absolute rounded-sm bg-white p-3 pb-6 shadow-polaroid"
           style={{
-            transform: `rotate(${photo.rotate}deg)`,
-            marginLeft: i % 2 === 1 ? '-1.5rem' : undefined,
-            zIndex: i,
+            top: fallingBox.top,
+            left: fallingBox.left,
+            width: fallingBox.width,
+            height: fallingBox.height,
+            zIndex: 60,
+            '--polaroid-rotate': `${ROTATIONS[swappingIndex % ROTATIONS.length]}deg`,
+            animation:
+              'polaroidPopOut 180ms ease-out forwards, ' +
+              'polaroidDropVanish 650ms 180ms cubic-bezier(0.45, 0, 0.55, 1) forwards',
           }}
         >
           <div className="aspect-square w-full overflow-hidden bg-blush-100">
             <img
-              src={photo.src}
-              alt={photo.caption}
-              loading="lazy"
+              src={photos[swappingIndex].src}
+              alt={photos[swappingIndex].caption}
               className="h-full w-full object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
             />
           </div>
-          <p className="mt-2 text-center font-hand text-base text-ink-700">{photo.caption}</p>
-
-          {i % 3 === 0 && (
-            <span className="absolute -right-2 -top-3 text-xl">🌷</span>
-          )}
+          <p className="mt-2 text-center font-hand text-base text-ink-700">
+            {photos[swappingIndex].caption}
+          </p>
         </div>
-      ))}
-    </div>
-  );
-}
-
-function InfiniteStream() {
-  // duplicate the list so the marquee loop is seamless
-  const doubled = [...STREAM_PHOTOS, ...STREAM_PHOTOS];
-
-  return (
-    <div className="group relative h-[50vh] w-full overflow-hidden rounded-2xl [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]">
-      <div className="animate-marqueeUp flex flex-col gap-4 group-hover:[animation-play-state:paused]">
-        {doubled.map((src, i) => (
-          <div key={i} className="w-full overflow-hidden rounded-xl shadow-polaroid">
-            <img
-              src={src}
-              alt=""
-              loading="lazy"
-              className="h-56 w-full object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          </div>
-        ))}
-      </div>
+      )}
     </div>
   );
 }
@@ -82,8 +210,7 @@ export default function MemoryGallery({ canPlay = false }) {
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-2">
         <PolaroidWall />
-        <div className="flex flex-col items-center justify-start gap-8">
-          <InfiniteStream />
+        <div className="flex flex-col items-center justify-center gap-8">
           <MusicPlayer canPlay={canPlay} heartIndex={0} />
         </div>
       </div>

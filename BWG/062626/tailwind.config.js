@@ -3,6 +3,32 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      keyframes: {
+        // pop out → drop down → vanish, then the component swaps
+        // the image and the card resets to its normal rotation.
+        popDropVanish: {
+          '0%': {
+            transform: 'rotate(var(--polaroid-rotate, 0deg)) scale(1) translateY(0)',
+            opacity: '1',
+          },
+          '25%': {
+            transform: 'rotate(var(--polaroid-rotate, 0deg)) scale(1.18) translateY(-14px)',
+            opacity: '1',
+          },
+          '70%': {
+            transform: 'rotate(var(--polaroid-rotate, 0deg)) scale(0.92) translateY(40px)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'rotate(var(--polaroid-rotate, 0deg)) scale(0.7) translateY(60px)',
+            opacity: '0',
+          },
+        },
+      },
+      animation: {
+        // Keep this duration equal to SWAP_ANIMATION_MS in PolaroidWall.jsx
+        popDropVanish: 'popDropVanish 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+      },
       colors: {
         blush: {
           50: '#FFF0F6',
@@ -70,3 +96,6 @@ export default {
   },
   plugins: [],
 };
+
+// Add this to the `extend` block of your tailwind.config.js
+// (alongside wherever `animate-marqueeUp` was already defined).

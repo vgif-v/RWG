@@ -66,20 +66,26 @@ export const POLAROID_PHOTOS = [
   { id: 'p5', src: '/src/assets/photos/photo-5.jpg', caption: '[caption]' },
 ];
 
-// Photos for the infinite scrolling stream (right column of Memory Gallery).
-export const STREAM_PHOTOS = [
-  '/src/assets/photos/stream-1.jpg',
-  '/src/assets/photos/stream-2.jpg',
-  '/src/assets/photos/stream-3.jpg',
-  '/src/assets/photos/stream-4.jpg',
-  '/src/assets/photos/stream-5.jpg',
-  '/src/assets/photos/stream-6.jpg',
+export const ALL_PHOTOS = [
+  { id: 'photo-1', src: '/src/assets/photos/photo-1.jpg', caption: '' },
+  { id: 'photo-2', src: '/src/assets/photos/photo-2.jpg', caption: '' },
+  { id: 'photo-3', src: '/src/assets/photos/photo-3.jpg', caption: '' },
+  { id: 'photo-4', src: '/src/assets/photos/photo-4.jpg', caption: '' },
+  { id: 'photo-5', src: '/src/assets/photos/photo-5.jpg', caption: '' },
+  { id: 'photo-6', src: '/src/assets/photos/photo-6.jpg', caption: '' },
+  { id: 'photo-7', src: '/src/assets/photos/photo-7.jpg', caption: '' },
+  { id: 'photo-8', src: '/src/assets/photos/photo-8.jpg', caption: '' },
+  { id: 'photo-9', src: '/src/assets/photos/photo-9.jpg', caption: '' },
+  { id: 'photo-10', src: '/src/assets/photos/photo-10.jpg', caption: '' },
+  { id: 'photo-11', src: '/src/assets/photos/photo-11.jpg', caption: '' },
+  { id: 'photo-12', src: '/src/assets/photos/photo-12.jpg', caption: '' },
+  { id: 'photo-13', src: '/src/assets/photos/photo-13.jpg', caption: '' },
 ];
-
+ 
 // Music player metadata. Drop your audio file into src/assets/music/
 export const SONG = {
-  title: '[Song Title]',
-  artist: '[Artist Name]',
+  title: 'Invisible String',
+  artist: 'Taylor Swift',
   src: '/src/assets/music/song.mp3',
   cover: '/src/assets/photos/photo-1.jpg', // reuse a photo as the album cover, or add your own
 };
