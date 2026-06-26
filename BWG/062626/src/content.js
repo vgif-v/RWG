@@ -31,12 +31,12 @@ export const BIRTHDAY_TITLE = `Happy Birthday ${HER_NAME}`;
 // The handwritten-style letter in the scrapbook section.
 export const SCRAPBOOK_LETTER = `My dearest Rosié,
 
-[Write a little about what makes today special — a memory,
-an inside joke, or just how much you've been looking
-forward to celebrating you.]
+I kept thinking about what to write here, but 
+I realized nothing could fully describe how much you mean to me. 
+So I'll just say this: thank you for being you. 
+I hope today makes you feel as loved and appreciated as you make me feel every day.
 
-Every day with you feels like a page worth keeping.
-This is just one small page in a much bigger story.
+Grateful ko always nmo bé bisan og cringe nako paminawon hehe
 
 I love you, today and always.`;
 
@@ -44,29 +44,29 @@ I love you, today and always.`;
 export const FINAL_LETTER = `Happy Birthday Bé!,
 
   Wish you all the happiness in the world, and may your day be filled with love, laughter, and unforgettable memories. You deserve all the joy that life has to offer.
- I love you more than this whole thing could ever show.`;
+ I love you always bé`;
 
 // Secret floating-star notes. Add as many as you like.
 export const SECRET_NOTES = [
   {
     id: 'note-1',
-    title: 'Our first date',
-    message: '[A short, sweet memory from the day you met or your first date.]',
+    title: 'Our first date?',
+    message: 'softest hands sa tanan pero bugnaw lang ang qwekqwek:(',
   },
   {
     id: 'note-2',
     title: 'An inside joke',
-    message: '[Something only the two of you would laugh at.]',
+    message: '"Manong Guard"',
   },
   {
     id: 'note-3',
     title: 'My favorite memory',
-    message: '[The moment with her you replay the most.]',
+    message: 'One of my favorite memories is when everytime na makigduwa kag chess',
   },
   {
     id: 'note-4',
     title: 'A little secret',
-    message: "[Something you've never told her, or rarely say out loud.]",
+    message: "I always get butterflies raba if mag meet ta",
   },
 ];
 
