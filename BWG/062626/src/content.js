@@ -51,7 +51,7 @@ export const SECRET_NOTES = [
   {
     id: 'note-1',
     title: 'Our first date?',
-    message: 'softest hands sa tanan pero bugnaw lang ang qwekqwek:(',
+    message: 'pinaka softest hands sa tanan grabee😍😍😍 pero bugnaw lang ang qwekqwek:(',
   },
   {
     id: 'note-2',
@@ -66,7 +66,7 @@ export const SECRET_NOTES = [
   {
     id: 'note-4',
     title: 'A little secret',
-    message: "I always get butterflies raba if mag meet ta",
+    message: "I always get butterflies raba if mag meet ta:)",
   },
 ];
 
