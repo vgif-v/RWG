@@ -46,7 +46,7 @@ const TITLE_DOCK_SCALE = 1; // 1 = title keeps its scale the whole time
 // from the wrapper's left edge — so for the rendered title to stay
 // horizontally centered, left is always set to (0.5 - width) as a
 // fraction, regardless of which width value is currently active.
-const TITLE_WIDTH_FRAC_INTRO = 0.50; // big, on first load / before scrolling
+const TITLE_WIDTH_FRAC_INTRO = 0.40; // big, on first load / before scrolling
 const TITLE_WIDTH_FRAC_DOCK = 0.32; // smaller, fits the cake's white face once docked
 const TITLE_TOP_FRAC = 0.50; // vertical position (fraction of cake height), same in both states
 
