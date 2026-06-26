@@ -33,7 +33,7 @@ export const SCRAPBOOK_LETTER = `My dearest Rosié,
 
 I kept thinking about what to write here, but 
 I realized nothing could fully describe how much you mean to me. 
-So I'll just say this: thank you for being you. 
+So I'll just say this, thank you for being you. 
 I hope today makes you feel as loved and appreciated as you make me feel every day.
 
 Grateful ko always nmo bé bisan og cringe nako paminawon hehe
